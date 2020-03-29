@@ -3,16 +3,6 @@ from flask import Flask, render_template, jsonify
 
 app = Flask(__name__)
 
-@app.route('/')
-def index():
-    """Retorna la pagina index."""
-    return "Index"
-
-@app.route('/about')
-def about():
-    """Retorna la pagina about."""
-    return 'About Python Flask'
-
 @app.route('/generate-chapters')
 def generar():
     """Generar capitulos."""
@@ -24,15 +14,12 @@ def listar(state):
     """Retorna el listado de capitulos por estado."""
     if(state=='disponible'):
         lista = list_available_chapters()
-        print(lista)
         return jsonify(lista)
     if(state=='reservado'):
         lista = list_reserved_chapters()
-        print(lista)
         return jsonify(lista)
     if(state=='alquilado'):
         lista = list_rented_chapters()
-        print(lista)
         return jsonify(lista)
 
 @app.route('/chapter/<capitulo>/rent')
