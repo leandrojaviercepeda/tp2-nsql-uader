@@ -27,6 +27,7 @@ def pay_chapter(capitulo,prec):
         con.hset(capitulo, "estado", 'alquilado')
         return capitulo+" alquilado por 24hs"
     else:
+        con.hset(capitulo, "estado", 'disponible')
         return capitulo+" no esta reservado"
 
 def list_available_chapters():
