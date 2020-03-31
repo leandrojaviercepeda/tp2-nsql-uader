@@ -31,6 +31,7 @@ def pay_chapter(chapter,prec):
         con.delete('reservado'+chapter)
         con.hset(chapter, "precio", prec)
         con.hset(chapter, "estado", 'alquilado')
+        con.setex('alquilado'+chapter, 1440, chapter)
         return "{} alquilado por 24hs".format(chapter)
     else:
         con.hset(chapter, "estado", 'disponible')
@@ -41,6 +42,8 @@ def list_available_chapters():
     aux = []
     chapters = ["Chapter 1: The Mandalorian","Chapter 2: The Child","Chapter 3: The Sin","Chapter 4: Sanctuary","Chapter 5: The Gunslinger","Chapter 6: The Prisoner","Chapter 7: The Reckoning","Chapter 8: Redemption"]
     for chapter in chapters:
+        if(con.pttl('reservado'+chapter) == -2 and con.pttl('alquilado'+chapter) == -2): 
+            con.hset(chapter, "estado", 'disponible')
         if(con.hget(chapter,"estado")=='disponible'):
             aux.append(chapter)
     return aux
