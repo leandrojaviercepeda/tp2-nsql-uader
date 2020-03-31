@@ -5,14 +5,12 @@ app = Flask(__name__)
 
 api_url_base = 'http://localhost:5000'
 
-actualize_chatpers_list = False
-
 @app.route('/', methods=['GET','POST'])
 def index():
     chapter_status = 'disponible'
 
     if request.method == 'POST':
-        if request.form['options'] or actualize_chatpers_list:
+        if request.form['options']:
             chapter_status = request.form['options']
             r = requests.get('{0}/chapter/{1}'.format(api_url_base, chapter_status))
             chapters = r.json() if r.status_code == 200 else []
@@ -28,9 +26,6 @@ def index():
 def rent_chapter(chapter):
     if request.method == 'GET':
         r = requests.get('{0}/chapter/{1}/rent'.format(api_url_base, chapter))
-        chapters = actualize_chatpers_list = True if r.status_code == 200 else ''
-        
-    actualize_chatpers_list = False
     """Retorna la pagina para pagar."""
     return redirect('/')
 
@@ -41,9 +36,7 @@ def pay_chapter():
             chapter = request.form['pay']
             price = request.form['price']
             r = requests.get('{0}/chapter/{1}/pay/{2}'.format(api_url_base, chapter.strip(), price.strip()))
-            chapters = actualize_chatpers_list = True if r.status_code == 200 else ''
-        
-    actualize_chatpers_list = False
+
     """Retorna la pagina para pagar."""
     return redirect('/')
 
