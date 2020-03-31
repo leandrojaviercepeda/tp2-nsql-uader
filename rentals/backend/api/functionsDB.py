@@ -11,24 +11,30 @@ def generate_chapters():
     con.hset("Chapter 6: The Prisoner", "estado", 'disponible')
     con.hset("Chapter 7: The Reckoning", "estado", 'disponible')
     con.hset("Chapter 8: Redemption", "estado", 'disponible')
-    return 'Capitulos generados'
+    return 'OK'
 
-def rent_chapter(capitulo):
+def rent_chapter(chapter):
     con = connect_db()
-    con.hset(capitulo, "estado", 'reservado')
-    con.setex('reservado'+capitulo, 240, capitulo)
-    return capitulo+' reservado por 4 minutos'
+    con.hset(chapter, "estado", 'reservado')
+    con.setex('reservado'+chapter, 240, chapter)
+    return "{} reservado por 4 minutos".format(chapter)
 
-def pay_chapter(capitulo,prec):
+def status_chapter(chapter):
     con = connect_db()
-    if(con.pttl('reservado'+capitulo) != -2):
-        con.delete('reservado'+capitulo)
-        con.hset(capitulo, "precio", prec)
-        con.hset(capitulo, "estado", 'alquilado')
-        return capitulo+" alquilado por 24hs"
+    con.hset(chapter, "estado", 'reservado')
+    status = con.hget(chapter,"estado")
+    return "{}".format(status)
+
+def pay_chapter(chapter,prec):
+    con = connect_db()
+    if(con.pttl('reservado'+chapter) != -2):
+        con.delete('reservado'+chapter)
+        con.hset(chapter, "precio", prec)
+        con.hset(chapter, "estado", 'alquilado')
+        return "{} alquilado por 24hs".format(chapter)
     else:
-        con.hset(capitulo, "estado", 'disponible')
-        return capitulo+" no esta reservado"
+        con.hset(chapter, "estado", 'disponible')
+        return "{} no esta reservado".format(chapter)
 
 def list_available_chapters():
     con = connect_db()
@@ -54,6 +60,6 @@ def list_rented_chapters():
     chapters = ["Chapter 1: The Mandalorian","Chapter 2: The Child","Chapter 3: The Sin","Chapter 4: Sanctuary","Chapter 5: The Gunslinger","Chapter 6: The Prisoner","Chapter 7: The Reckoning","Chapter 8: Redemption"]
     for chapter in chapters:
         if(con.hget(chapter,"estado")=='alquilado'):
-            aux.append(chapter+' ')
+            aux.append(chapter)
     return aux
     
