@@ -5,9 +5,9 @@ __pychache__
 build
 
 # Docker
-.dockerignore
-docker-compose.yml
-Dockerfile
+# .dockerignore
+# docker-compose.yml
+# Dockerfile
 
 # Logs
 logs
