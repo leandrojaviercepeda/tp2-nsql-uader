@@ -4,7 +4,7 @@ web:
     ports:
         - '3260:3260'
     volumes: 
-        - api:/api
+        - ./api:/api
     links:
         - 'db:redis'
 db:
