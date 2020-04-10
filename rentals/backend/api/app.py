@@ -11,12 +11,6 @@ from flask import Flask, render_template, jsonify
 
 app = Flask(__name__)
 
-@app.route('/generate-chapters')
-def load_chapters():
-    """Generar capitulos."""
-    msj = generate_chapters()
-    return msj
-
 @app.route('/chapter/<state>')
 def to_list_by_status(state):
     """Retorna el listado de capitulos por estado."""
